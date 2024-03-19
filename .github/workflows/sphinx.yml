@@ -6,7 +6,7 @@ name: Update Sphinx Documentation
 on:
   push:
     branches:
-      - main # The branch from which we want to retrieve the documentation.
+      - stable # The branch from which we want to retrieve the documentation.
 
 jobs:
   build:
