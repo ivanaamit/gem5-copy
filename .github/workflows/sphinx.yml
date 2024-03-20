@@ -1,40 +1,20 @@
 ---
-#This workflow updates the Sphinx documentation whenever changes are committed to the repository.
+name: documentation
 
-name: Update Sphinx Documentation
+on: [push, pull_request, workflow_dispatch]
 
-on:
-  push:
-    branches:
-      - stable # The branch from which we want to retrieve the documentation.
+permissions:
+  contents: write
 
 jobs:
-  build:
+  docs:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Build documentation
+          pip install sphinx sphinx_rtd_theme myst_parser
+      - name: Sphinx build
         run: |
-          sphinx-build -b html docs/source docs/build
-
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          git add .
-          git commit -m "stdlib: Automated sphinx documentation update"
-          git push
+          sphinx-build doc _build
