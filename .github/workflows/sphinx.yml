@@ -7,62 +7,28 @@ permissions:
   contents: write
 
 jobs:
-  name-artifacts:
+  build-gem5:
     runs-on: ubuntu-latest
+    container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
         build-name: ${{ steps.artifact-name.outputs.name }}
     steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v4
+          with:
+              # Scheduled workflows run on the default branch by default. We
+              # therefore need to explicitly checkout the develop branch.
+              ref: stable
         - id: artifact-name
-          run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S-")" >> $GITHUB_OUTPUT
-
-  build-gem5:
-      strategy:
-          fail-fast: false
-          matrix:
-      # NULL is in quotes since it is considered a keyword in yaml files
-              image: [ALL, ALL_CHI, ARM, ALL_MSI, ALL_MESI_Two_Level, 'NULL', NULL_MI_example, RISCV, VEGA_X86]
-      # this allows us to pass additional command line parameters
-      # the default is to add -j $(nproc), but some images
-      # require more specifications when built
-              include:
-                  - setconfig-option: ''
-                  - isa-option: ''
-                  - image: ALL_CHI
-                    setconfig-option: RUBY_PROTOCOL_CHI=y
-                    isa-option: ALL
-                  - image: ALL_MSI
-                    setconfig-option: RUBY_PROTOCOL_MSI=y
-                    isa-option: ALL
-                  - image: ALL_MESI_Two_Level
-                    setconfig-option: RUBY_PROTOCOL_MESI_TWO_LEVEL=y
-                    isa-option: ALL
-                  - image: NULL_MI_example
-                    setconfig-option: RUBY_PROTOCOL_MI_EXAMPLE=y
-                    isa-option: 'NULL'
-      runs-on: ubuntu-latest
-      needs: name-artifacts
-      container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
-      steps:
-          - uses: actions/checkout@v4
-            with:
-        # Scheduled workflows run on the default branch by default. We
-        # therefore need to explicitly checkout the develop branch.
-                ref: develop
-          - name: defconfig gem5
-            if: ${{ matrix.setconfig-option  != '' }}
-            run: scons defconfig build/${{ matrix.image }} build_opts/${{ matrix.isa-option }}
-          - name: setconfig gem5
-            if: ${{ matrix.setconfig-option  != '' }}
-            run: scons setconfig build/${{ matrix.image }} ${{ matrix.setconfig-option }}
-          - name: Build gem5
-            run: scons build/${{ matrix.image }}/gem5.opt -j $(nproc)
-          - uses: actions/upload-artifact@v3
-            with:
-                name: ${{ needs.name-artifacts.outputs.build-name }}${{ matrix.image }}
-                path: build/${{ matrix.image }}/gem5.opt
-                retention-days: 5
-          - run: echo "This job's status is ${{ job.status }}."
+          run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+        - name: Build gem5
+          run: |
+              scons build/ALL/gem5.opt -j $(nproc)
+        - uses: actions/upload-artifact@v3
+          with:
+              name: ${{ steps.artifact-name.outputs.name }}
+              path: build/ALL/gem5.opt
+              retention-days: 5
+        - run: echo "This job's status is ${{ job.status }}."
 
   docs:
     runs-on: ubuntu-latest
