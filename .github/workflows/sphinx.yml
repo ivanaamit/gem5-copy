@@ -11,24 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-        build-name: my-artifact
+      build-name: my-artifact
     steps:
-        - uses: actions/checkout@v4
-          with:
-              # Scheduled workflows run on the default branch by default. We
-              # therefore need to explicitly checkout the develop branch.
-              ref: stable
-        - id: artifact-name
-          run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
-        - name: Build gem5
-          run: |
-              scons build/ALL/gem5.opt -j $(nproc)
-        - uses: actions/upload-artifact@v3
-          with:
-              name: my-artifact
-              path: build/ALL/gem5.opt
-              retention-days: 5
-        - run: echo "This job's status is ${{ job.status }}."
+      - uses: actions/checkout@v4
+        with:
+          ref: stable  # Checkout the 'stable' branch explicitly
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+      - name: Build gem5
+        run: |
+          scons build/ALL/gem5.opt -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: build/ALL/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
+
   docs:
     runs-on: ubuntu-latest
     needs: build-gem5
@@ -38,10 +37,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install sphinx sphinx_rtd_theme myst_parser
-      - uses: actions/download-artifact@v3
-    	  with:
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
           name: my-artifact
-          path: build/ALL
+          path: build/ALL  # Correct indentation here
       - name: Sphinx build
         run: |
           sphinx-build doc src/python/
