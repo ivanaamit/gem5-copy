@@ -29,15 +29,3 @@ jobs:
               path: build/ALL/gem5.opt
               retention-days: 5
         - run: echo "This job's status is ${{ job.status }}."
-
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - name: Install dependencies
-        run: |
-          pip install sphinx sphinx_rtd_theme myst_parser
-      - name: Sphinx build
-        run: |
-          sphinx-build doc src/python/
