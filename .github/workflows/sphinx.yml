@@ -37,6 +37,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install sphinx sphinx_rtd_theme myst_parser
+      - name: Create doc folder
+        run: mkdir doc  # Create the 'doc' folder
       - name: Download
         uses: actions/download-artifact@v3
         with:
