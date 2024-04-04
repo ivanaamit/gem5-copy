@@ -46,4 +46,4 @@ jobs:
           path: build/ALL  # Correct indentation here
       - name: Sphinx build
         run: |
-          sphinx-build doc src/python/
+          sphinx-build doc build/ALL/python
