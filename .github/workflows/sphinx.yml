@@ -24,7 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: build/ALL/gem5.opt
+          path: build/ALL
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
 
