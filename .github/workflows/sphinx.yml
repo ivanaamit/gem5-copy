@@ -24,24 +24,56 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: build/ALL
+          path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
 
-  docs:
+  build-docs:
     runs-on: ubuntu-latest
     needs: build-gem5
+    
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - name: Install dependencies
-        run: |
-          pip install sphinx sphinx_rtd_theme myst_parser
-      - name: Download
-        uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-          path: build/ALL  # Correct indentation here
-      - name: Sphinx build
-        run: |
-          sphinx-build doc build/ALL/python
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Download
+      uses: actions/download-artifact@v3
+      with:
+        name: my-artifact
+        path: build/ALL  # Correct indentation here
+      
+    - name: Install dependencies
+      run: |
+        python -m venv build/
+        source build/bin/activate
+        pip install -r requirements.txt
+        pip install sphinx
+      
+    - name: Create docs directory
+      run: mkdir -p docs && cd docs
+      
+    - name: Create gem5-sphinx script
+      run: |
+        echo "#!/usr/bin/env python" > gem5-sphinx
+        echo "import sphinx.__main__" >> gem5-sphinx
+      
+    - name: Create gem5-sphinx-apidoc script
+      run: |
+        echo "#!/usr/bin/env python" > gem5-sphinx-apidoc
+        echo "import re" >> gem5-sphinx-apidoc
+        echo "import sys" >> gem5-sphinx-apidoc
+        echo "from sphinx.ext.apidoc import main" >> gem5-sphinx-apidoc
+        echo "if __name__ == '__m5_main__':" >> gem5-sphinx-apidoc
+        echo "    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])" >> gem5-sphinx-apidoc
+        echo "    sys.exit(main())" >> gem5-sphinx-apidoc
+      
+    - name: Generate API documentation
+      run: ../build/ALL/gem5.opt gem5-sphinx-apidoc -o docs ../src/python/gem5 -F -e
+      
+    - name: Build the documentation
+      run: SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
