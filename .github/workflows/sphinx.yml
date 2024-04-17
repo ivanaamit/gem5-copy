@@ -19,7 +19,7 @@ jobs:
       with:
         name: my-artifact
         path: build/ALL
-
+    - run: chmod u+x build/ALL/gem5.opt
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
