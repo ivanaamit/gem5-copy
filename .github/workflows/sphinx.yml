@@ -28,38 +28,17 @@ jobs:
       
     - name: Install dependencies
       run: |
-        python -m venv build/
-        source build/bin/activate
-        pip install -r requirements.txt
-        pip install sphinx
-      
-    - name: Create docs directory
-      run: mkdir -p docs && cd docs
-      
-    - name: Create gem5-sphinx script
-      run: |
-        echo "#!/usr/bin/env python" > gem5-sphinx
-        echo "import sphinx.__main__" >> gem5-sphinx
-      
-    - name: Create gem5-sphinx-apidoc script
-      run: |
-        echo "#!/usr/bin/env python" > gem5-sphinx-apidoc
-        echo "import re" >> gem5-sphinx-apidoc
-        echo "import sys" >> gem5-sphinx-apidoc
-        echo "from sphinx.ext.apidoc import main" >> gem5-sphinx-apidoc
-        echo "if __name__ == '__m5_main__':" >> gem5-sphinx-apidoc
-        echo "    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])" >> gem5-sphinx-apidoc
-        echo "    sys.exit(main())" >> gem5-sphinx-apidoc
-      
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx-rtd-theme  # Install Sphinx and a theme, adjust as necessary
+        # Add other dependencies if required
+
     - name: Generate API documentation
       run: |
         sudo apt update
         sudo apt --fix-broken install
-        sudo apt install libunwind-dev
-        sudo apt install libprotobuf-dev
-        sudo apt install libhdf5-serial-dev
-        sudo apt install libgoogle-perftools-dev
+        sudo apt install -y libunwind-dev libprotobuf-dev libhdf5-serial-dev libgoogle-perftools-dev
         build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
       
     - name: Build the documentation
-      run: SPHINXBUILD="build/ALL/gem5.opt gem5-sphinx" make html
+      run: |
+        SPHINXBUILD="build/ALL/gem5.opt gem5-sphinx" make -C docs html
