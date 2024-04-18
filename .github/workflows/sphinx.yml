@@ -18,7 +18,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v3
       with:
         name: my-artifact-new
-        path: build/ALL/gem5.opt
+        path: build/ALL/
     - run: chmod u+x build/ALL/gem5.opt
     
     - name: Set up Python
