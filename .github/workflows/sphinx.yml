@@ -32,6 +32,25 @@ jobs:
         pip install sphinx sphinx-rtd-theme  # Install Sphinx and a theme, adjust as necessary
         # Add other dependencies if required
 
+    - name: Create docs directory
+      run: mkdir -p docs && cd docs
+      
+    - name: Create gem5-sphinx script
+      run: |
+        echo "#!/usr/bin/env python" > gem5-sphinx
+        echo "import sphinx.__main__" >> gem5-sphinx
+      
+    - name: Create gem5-sphinx-apidoc script
+      run: |
+        echo "#!/usr/bin/env python" > gem5-sphinx-apidoc
+        echo "import re" >> gem5-sphinx-apidoc
+        echo "import sys" >> gem5-sphinx-apidoc
+        echo "from sphinx.ext.apidoc import main" >> gem5-sphinx-apidoc
+        echo "if __name__ == '__m5_main__':" >> gem5-sphinx-apidoc
+        echo "    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])" >> gem5-sphinx-apidoc
+        echo "    sys.exit(main())" >> gem5-sphinx-apidoc
+      
+
     - name: Generate API documentation
       run: |
         sudo apt update
