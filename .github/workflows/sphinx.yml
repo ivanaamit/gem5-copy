@@ -55,7 +55,6 @@ jobs:
       run: |
         sudo apt update
         sudo apt --fix-broken install
-        sudo apt install dependency-package
         sudo apt install libunwind-dev
         sudo apt install libgoogle-perftools-dev
         build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
