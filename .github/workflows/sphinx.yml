@@ -29,8 +29,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        apt-get install python3-sphinx
-        pip install sphinx-rtd-theme  # Install Sphinx and a theme, adjust as necessary
+        pip3 install sphinx sphinx-rtd-theme  # Install Sphinx and a theme, adjust as necessary
         # Add other dependencies if required
 
     - name: Create docs directory
