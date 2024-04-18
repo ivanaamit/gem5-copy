@@ -60,4 +60,4 @@ jobs:
       
     - name: Build the documentation
       run: |
-        SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make -C docs html
+        SPHINXBUILD="../build/ALL/gem5.opt gem5-sphinx" make html
