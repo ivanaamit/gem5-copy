@@ -52,7 +52,9 @@ jobs:
         echo "    sys.exit(main())" >> gem5-sphinx-apidoc
       
     - name: Generate API documentation
-      run: build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
+      run: |
+        sudo apt-get install libgoogle-perftools-dev
+        build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
       
     - name: Build the documentation
       run: SPHINXBUILD="build/ALL/gem5.opt gem5-sphinx" make html
