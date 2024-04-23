@@ -17,7 +17,7 @@ jobs:
     - name: Download
       uses: dawidd6/action-download-artifact@v3
       with:
-        name: my-artifact-1
+        name: my-artifact-new
         path: build/ALL/
     - run: chmod u+x build/ALL/gem5.opt
     
