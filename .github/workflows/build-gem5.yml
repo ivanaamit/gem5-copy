@@ -1,10 +1,12 @@
 ---
 name: documentation
 
-on:
+on: [push, pull_request, workflow_dispatch]
+
+#on:
   # Runs every Monday from 5AM UTC
-    schedule:
-        - cron: 00 5 * * 1
+ #   schedule:
+  #      - cron: 00 5 * * 1
         
 permissions:
   contents: write
@@ -14,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-      build-name: my-artifact-1
+      build-name: my-artifact-2
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,7 +28,7 @@ jobs:
           scons build/ALL/gem5.opt -j $(nproc)
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-1
+          name: my-artifact-2
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
