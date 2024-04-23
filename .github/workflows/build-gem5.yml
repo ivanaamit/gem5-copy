@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-      build-name: my-artifact-new
+      build-name: my-artifact-1
     steps:
       - uses: actions/checkout@v4
         with:
