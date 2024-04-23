@@ -1,8 +1,11 @@
 ---
 name: documentation
 
-on: [push, pull_request, workflow_dispatch]
-
+on:
+  # Runs every Monday from 5AM UTC
+    schedule:
+        - cron: 00 5 * * 1
+        
 permissions:
   contents: write
 
