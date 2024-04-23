@@ -26,7 +26,7 @@ jobs:
           scons build/ALL/gem5.opt -j $(nproc)
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-new
+          name: my-artifact-1
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
