@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-      build-name: my-artifact-2
+      build-name: my-artifact-10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,7 +28,7 @@ jobs:
           scons build/ALL/gem5.opt -j $(nproc)
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-2
+          name: my-artifact-10
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
