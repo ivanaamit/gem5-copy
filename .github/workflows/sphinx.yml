@@ -17,7 +17,7 @@ jobs:
     - name: Download
       uses: dawidd6/action-download-artifact@v3
       with:
-        commit: 901f165
+        branch: stable
         name: my-artifact-10
         path: build/ALL/
     - run: chmod u+x build/ALL/gem5.opt
