@@ -15,8 +15,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download
-      uses: dawidd6/action-download-artifact@v2
+      uses: dawidd6/action-download-artifact@v3
       with:
+        branch: stable
+        commit: 901f165
         name: my-artifact-10
         path: build/ALL/
     - run: chmod u+x build/ALL/gem5.opt
