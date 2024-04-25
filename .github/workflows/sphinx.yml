@@ -17,7 +17,6 @@ jobs:
     - name: Download
       uses: dawidd6/action-download-artifact@v3
       with:
-        branch: stable
         commit: 901f165
         name: my-artifact-10
         path: build/ALL/
