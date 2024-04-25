@@ -7,6 +7,27 @@ permissions:
   contents: write
 
 jobs:
+  build-gem5:
+    runs-on: ubuntu-latest
+    container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
+    outputs:
+      build-name: my-artifact-gem5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: stable  # Checkout the 'stable' branch explicitly
+      - id: artifact-name
+        run: echo "name=$(date +"%Y-%m-%d_%H.%M.%S")-ALL" >> $GITHUB_OUTPUT
+      - name: Build gem5
+        run: |
+          scons build/ALL/gem5.opt -j $(nproc)
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact-gem5
+          path: build/ALL/gem5.opt
+          retention-days: 5
+      - run: echo "This job's status is ${{ job.status }}."
+
   build-docs:
     runs-on: ubuntu-latest
     
@@ -15,11 +36,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download
-      uses: dawidd6/action-download-artifact@v3
+      uses: actions/download-artifact@v3
       with:
-        branch: stable
-        name: my-artifact-10
+        name: my-artifact-gem5
         path: build/ALL/
+        
     - run: chmod u+x build/ALL/gem5.opt
     
     - name: Set up Python
