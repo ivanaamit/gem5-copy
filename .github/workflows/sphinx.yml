@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-      build-name: my-artifact-gem5-2
+      build-name: my-artifact-gem5-3
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,7 @@ jobs:
           scons build/ALL/gem5.opt -j $(nproc)
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-gem5-2
+          name: my-artifact-gem5-3
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
@@ -39,7 +39,7 @@ jobs:
     - name: Download
       uses: actions/download-artifact@v3
       with:
-        name: my-artifact-gem5-2
+        name: my-artifact-gem5-3
         path: build/ALL/
         
     - run: chmod u+x build/ALL/gem5.opt
@@ -81,4 +81,4 @@ jobs:
         build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
       
     - name: Build the documentation
-      run: SPHINXBUILD="../build/ALL/gem5.opt ../docs/gem5-sphinx" make html
+      run: SPHINXBUILD="../build/ALL/gem5.opt" make -C ../docs/gem5-sphinx html
