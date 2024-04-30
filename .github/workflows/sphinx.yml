@@ -81,4 +81,4 @@ jobs:
         build/ALL/gem5.opt gem5-sphinx-apidoc -o docs src/python/gem5 -F -e
       
     - name: Build the documentation
-      run: SPHINXBUILD="../build/ALL/gem5.opt" make -C gem5-sphinx html
+      run: SPHINXBUILD="../build/ALL/gem5.opt" make -C /docs/gem5-sphinx html
