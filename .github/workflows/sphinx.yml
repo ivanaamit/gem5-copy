@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
     outputs:
-      build-name: my-artifact-gem5-3
+      build-name: my-artifact-gem5-4
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,7 @@ jobs:
           scons build/ALL/gem5.opt -j $(nproc)
       - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact-gem5-3
+          name: my-artifact-gem5-4
           path: build/ALL/gem5.opt
           retention-days: 5
       - run: echo "This job's status is ${{ job.status }}."
@@ -39,7 +39,7 @@ jobs:
     - name: Download
       uses: actions/download-artifact@v3
       with:
-        name: my-artifact-gem5-3
+        name: my-artifact-gem5-4
         path: build/ALL/
         
     - run: chmod u+x build/ALL/gem5.opt
